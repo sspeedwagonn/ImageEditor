@@ -1,15 +1,17 @@
 import sys
 
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QColor
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QGridLayout, \
-    QLabel
+    QLabel, QGraphicsColorizeEffect
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
         self.photo_label = QLabel()
         self.photo = QPixmap("photo.png")
+
         self.open_button = QPushButton("Open")
         self.save_button = QPushButton("Save")
 
@@ -37,6 +39,8 @@ class MainWindow(QMainWindow):
         self.photo_label.setPixmap(self.photo)
         main_layout.addWidget(self.photo_label)
 
+
+
         edits_layout = QHBoxLayout()
         edits_layout.addWidget(self.bw_button)
         edits_layout.addWidget(self.blue_button)
@@ -44,7 +48,18 @@ class MainWindow(QMainWindow):
         edits_layout.addWidget(self.yellow_button)
         main_layout.addLayout(edits_layout)
 
+        self.bw_button.clicked.connect(lambda: self.apply_color_filter(QColor(128, 128, 128)))
+        self.blue_button.clicked.connect(lambda: self.apply_color_filter(QColor(0, 0, 255)))
+        self.rose_button.clicked.connect(lambda: self.apply_color_filter(QColor(255, 102, 204)))
+        self.yellow_button.clicked.connect(lambda: self.apply_color_filter(QColor(255, 255, 0)))
+
         central_widget.setLayout(main_layout)
+
+    def apply_color_filter(self, color):
+        colorize = QGraphicsColorizeEffect()
+        colorize.setColor(color)
+
+        self.photo_label.setGraphicsEffect(colorize)
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
